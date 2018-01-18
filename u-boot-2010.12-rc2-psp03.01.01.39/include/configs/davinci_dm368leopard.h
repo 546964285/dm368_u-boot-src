@@ -278,4 +278,13 @@
 #define CONFIG_SYS_INIT_SP_ADDR		\
 	(CONFIG_SYS_SDRAM_BASE + 0x1000 - GENERATED_GBL_DATA_SIZE)
 
+#define DEBUG
+//#define CONFIG_LCD
+#define CONFIG_VIDEO
+#define CONFIG_CFB_CONSOLE
+#define CONFIG_VIDEO_DM36X
+#define VIDEO_KBD_INIT_FCT 0
+#define VIDEO_TSTC_FCT serial_tstc
+#define VIDEO_GETC_FCT serial_getc
+
 #endif /* __CONFIG_H */
