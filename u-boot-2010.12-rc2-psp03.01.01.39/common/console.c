@@ -566,9 +566,11 @@ int console_init_r(void)
 	char *stdinname, *stdoutname, *stderrname;
 	struct stdio_dev *inputdev = NULL, *outputdev = NULL, *errdev = NULL;
 #ifdef CONFIG_SYS_CONSOLE_ENV_OVERWRITE
+    debug ("CONFIG_SYS_CONSOLE_ENV_OVERWRITE defined\n");
 	int i;
 #endif /* CONFIG_SYS_CONSOLE_ENV_OVERWRITE */
 #ifdef CONFIG_CONSOLE_MUX
+    debug ("CONFIG_CONSOLE_MUX defined\n");
 	int iomux_err = 0;
 #endif
 
@@ -639,9 +641,12 @@ done:
 
 #if 0
 	/* If nothing usable installed, use only the initial console */
+    printf ("exit console_init_f @0\n");
 	if ((stdio_devices[stdin] == NULL) && (stdio_devices[stdout] == NULL))
 		return 0;
 #endif
+
+    debug ("exit console_init_f @1\n");
 	return 0;
 }
 
@@ -683,6 +688,7 @@ int console_init_r(void)
 			break;
 	}
 
+    debug ("can u reach here? @ 1\n");
 	/* Initializes output console first */
 	if (outputdev != NULL) {
 		console_setfile(stdout, outputdev);
@@ -700,10 +706,18 @@ int console_init_r(void)
 		console_devices[stdin][0] = inputdev;
 #endif
 	}
+    
+    debug ("can u reach here? @ 2\n");
+    if ((outputdev == NULL) || (inputdev==NULL))
+    {
+        debug ("opps!\n");
+    }
 
+    debug ("can u reach here? @ 3, gd->flags = %x\n", gd->flags);
 	gd->flags |= GD_FLG_DEVINIT;	/* device initialization completed */
 
 	stdio_print_current_devices();
+    debug ("can u reach here? @ 4\n");
 
 	/* Setting environment variables */
 	for (i = 0; i < 3; i++) {
@@ -716,6 +730,7 @@ int console_init_r(void)
 		return 0;
 #endif
 
+    debug ("exit console_init_r @ 3\n");
 	return 0;
 }
 

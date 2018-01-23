@@ -26,7 +26,7 @@
 
 #define CONFIG_SKIP_LOWLEVEL_INIT	/* U-Boot is a 3rd stage loader */
 #define CONFIG_SYS_NO_FLASH		/* that is, no *NOR* flash */
-#define CONFIG_SYS_CONSOLE_INFO_QUIET
+//#define CONFIG_SYS_CONSOLE_INFO_QUIET
 #define	CONFIG_DISPLAY_CPUINFO
 
 /* SoC Configuration */
@@ -280,10 +280,15 @@
 
 #define DEBUG
 //#define CONFIG_LCD
+#define CONFIG_CMD_BMP
 #define CONFIG_VIDEO
-#define CONFIG_CFB_CONSOLE
 #define CONFIG_VIDEO_DM36X
-#define VIDEO_KBD_INIT_FCT 0
+#define CONFIG_VIDEO_LOGO
+#define VIDEO_FB_16BPP_WORD_SWAP
+#define CONFIG_CFB_CONSOLE
+//#define CONFIG_CONSOLE_MUX
+
+#define VIDEO_KBD_INIT_FCT -1
 #define VIDEO_TSTC_FCT serial_tstc
 #define VIDEO_GETC_FCT serial_getc
 

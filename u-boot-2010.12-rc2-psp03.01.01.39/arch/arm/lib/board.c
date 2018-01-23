@@ -540,27 +540,34 @@ void board_init_r (gd_t *id, ulong dest_addr)
 
 	stdio_init ();	/* get the devices list going. */
 
+    debug ("call jumptable_init\n");
 	jumptable_init ();
 
 #if defined(CONFIG_API)
 	/* Initialize API */
+    debug ("call api_init\n");
 	api_init ();
 #endif
 
+    debug ("call console_init_r\n");
 	console_init_r ();	/* fully init console as a device */
 
 #if defined(CONFIG_ARCH_MISC_INIT)
 	/* miscellaneous arch dependent initialisations */
+    debug ("call arch_misc_init\n");
 	arch_misc_init ();
 #endif
 #if defined(CONFIG_MISC_INIT_R)
 	/* miscellaneous platform dependent initialisations */
+    debug ("call misc_init_r\n");
 	misc_init_r ();
 #endif
 
 	 /* set up exceptions */
+    debug ("call interrupt_init\n");
 	interrupt_init ();
 	/* enable exceptions */
+    debug ("call enable_interrupts\n");
 	enable_interrupts ();
 
 	/* Perform network card initialisation if necessary */
@@ -584,10 +591,12 @@ void board_init_r (gd_t *id, ulong dest_addr)
 #endif
 
 #ifdef BOARD_LATE_INIT
+    debug ("call board_late_init\n");
 	board_late_init ();
 #endif
 
 #ifdef CONFIG_BITBANGMII
+    debug ("call bb_miiphy_init\n");
 	bb_miiphy_init();
 #endif
 #if defined(CONFIG_CMD_NET)

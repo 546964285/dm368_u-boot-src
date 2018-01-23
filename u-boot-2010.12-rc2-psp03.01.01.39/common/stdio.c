@@ -221,24 +221,32 @@ int stdio_init (void)
 	drv_video_init ();
 #endif
 #ifdef CONFIG_KEYBOARD
+    debug ("call drv_keyboard_init\n");
 	drv_keyboard_init ();
 #endif
 #ifdef CONFIG_LOGBUFFER
+    debug ("call drv_logbuff_init\n");
 	drv_logbuff_init ();
 #endif
+    debug ("call drv_system_init\n");
 	drv_system_init ();
 #ifdef CONFIG_SERIAL_MULTI
+    debug ("call serial_stdio_init\n");
 	serial_stdio_init ();
 #endif
 #ifdef CONFIG_USB_TTY
+    debug ("call drv_usbtty_init\n");
 	drv_usbtty_init ();
 #endif
 #ifdef CONFIG_NETCONSOLE
+    debug ("call drv_nc_init\n");
 	drv_nc_init ();
 #endif
 #ifdef CONFIG_JTAG_CONSOLE
+    debug ("call drv_jtag_console_init\n");
 	drv_jtag_console_init ();
 #endif
 
+    debug ("exit stdio_init\n");
 	return (0);
 }

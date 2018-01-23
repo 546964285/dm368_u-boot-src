@@ -1641,11 +1641,12 @@ int drv_video_init (void)
 #if !defined(CONFIG_VGA_AS_SINGLE_DEVICE)
 	PRINTD ("KBD: Keyboard init ...\n");
 	skip_dev_init |= (VIDEO_KBD_INIT_FCT == -1);
+    printf ("skip_dev_init = %d\n", skip_dev_init);
 #endif
 
 	if (skip_dev_init)
 		return 0;
-
+    printf ("@ drv_video_init, do you run to here?\n");
 	/* Init vga device */
 	memset (&console_dev, 0, sizeof (console_dev));
 	strcpy (console_dev.name, "vga");
@@ -1667,5 +1668,6 @@ int drv_video_init (void)
 		return 0;
 
 	/* Return success */
+    printf ("drv_video_init() return success\n");
 	return 1;
 }
