@@ -8,13 +8,51 @@
 
 
 GraphicDevice smi;
+#define VIDEO_MEM_SIZE 0x200000
 
 void *video_hw_init (void)
 {
     debug ("@ in video_hw_init()\n");
     
     GraphicDevice *pGD = (GraphicDevice *)&smi;
-    
+    struct ctfb_res_modes *res_mode;
+
+    res_mode->xres = 640;
+    res_mode->yres = 480;
+    res_mode->pixclock = 75000; // 13.5MHz
+    res_mode->left_margin = 80; // VENC_HSTART
+    res_mode->right_margin = 48;
+    res_mode->upper_margin = 3;
+    res_mode->lower_margin = 8;
+    res_mode->hsync_len = 32;
+    res_mode->vsync_len = 4;
+    res_mode->sync = 0;
+    res_mode->vmode = FB_VMODE_NONINTERLACED;
+
+     /* fill in Graphic device struct */
+    pGD->frameAdrs = LCD_VIDEO_ADDR;
+    pGD->memSize = VIDEO_MEM_SIZE;
+    /* clear video memory */
+    //memset((void *)pGD->frameAdrs, 0x00, pGD->memSize);
+    memset((void *)pGD->frameAdrs, 0xe0, pGD->memSize);
+
+    pGD->winSizeX = 640;
+    pGD->plnSizeX = 640;
+    res_mode->xres = 640;
+    pGD->winSizeY = pGD->plnSizeY = res_mode->yres;
+    pGD->gdfBytesPP = 2;
+    pGD->gdfIndex = GDF_16BIT_565RGB;
+
+    debug ("res_mode->xres=%d\n",res_mode->xres);
+    debug ("pGD->winSizeX=%d\n",pGD->winSizeX);
+    debug ("pGD->winSizeY=%d\n",pGD->winSizeY);
+    debug ("pGD->plnSizeX=%d\n",pGD->plnSizeX);
+    debug ("pGD->plnSizeY=%d\n",pGD->plnSizeY);
+    debug ("pGD->gdfBytesPP=%d\n",pGD->gdfBytesPP);
+    debug ("pGD->gdfIndex=%d\n",pGD->gdfIndex);
+    // setup registers.
+    // 最好根据上面的变量进行设置
+    // 这里偷懒一下，直接给值
     /*
      * Setup clocking / DACs
      */

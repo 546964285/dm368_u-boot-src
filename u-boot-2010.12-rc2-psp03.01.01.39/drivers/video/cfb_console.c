@@ -1358,6 +1358,10 @@ void logo_plot (void *screen, int width, int x, int y)
 			      ((y * width * VIDEO_PIXEL_SIZE) +
 			       x * VIDEO_PIXEL_SIZE);
 
+    debug ("@ logo_plot()\n");
+    debug ("width = %d, VIDEO_LOGO_WIDTH=%d, VIDEO_PIXEL_SIZE=%d\n",width,VIDEO_LOGO_WIDTH,VIDEO_PIXEL_SIZE);
+    debug ("skip = %d\n",skip);
+    debug ("screen=%p %x\n",screen,screen);
 #ifdef CONFIG_VIDEO_BMP_LOGO
 	source = bmp_logo_bitmap;
 
@@ -1378,6 +1382,9 @@ void logo_plot (void *screen, int width, int x, int y)
 	logo_blue = linux_logo_blue;
 #endif
 
+    debug ("source = %p\n",source);
+    debug ("logo data prepared\n");
+
 	if (VIDEO_DATA_FORMAT == GDF__8BIT_INDEX) {
 		for (i = 0; i < VIDEO_LOGO_COLORS; i++) {
 			video_set_lut (i + VIDEO_LOGO_LUT_OFFSET,
@@ -1385,12 +1392,18 @@ void logo_plot (void *screen, int width, int x, int y)
 		}
 	}
 
+    debug ("before going to while loop\n");
+    debug ("ycount = %d, xcount = %d\n", ycount, VIDEO_LOGO_WIDTH);
+
 	while (ycount--) {
+        //debug ("current ycount = %d\n",ycount);
 #if defined(VIDEO_FB_16BPP_PIXEL_SWAP)
 		int xpos = x;
+        //debug ("xpos = %d\n",xpos);
 #endif
 		xcount = VIDEO_LOGO_WIDTH;
 		while (xcount--) {
+            //debug ("curren xcount = %d, ycount = %d\n",xcount,ycount);
 			r = logo_red[*source - VIDEO_LOGO_LUT_OFFSET];
 			g = logo_green[*source - VIDEO_LOGO_LUT_OFFSET];
 			b = logo_blue[*source - VIDEO_LOGO_LUT_OFFSET];
@@ -1398,9 +1411,11 @@ void logo_plot (void *screen, int width, int x, int y)
 			switch (VIDEO_DATA_FORMAT) {
 			case GDF__8BIT_INDEX:
 				*dest = *source;
+                //debug ("int branch 8b\n");
 				break;
 			case GDF__8BIT_332RGB:
 				*dest = ((r >> 5) << 5) | ((g >> 5) << 2) | (b >> 6);
+                //debug ("int branch 8b332\n");
 				break;
 			case GDF_15BIT_555RGB:
 #if defined(VIDEO_FB_16BPP_PIXEL_SWAP)
@@ -1409,6 +1424,7 @@ void logo_plot (void *screen, int width, int x, int y)
 				*(unsigned short *) dest =
 					SWAP16 ((unsigned short) (((r >> 3) << 10) | ((g >> 3) << 5) | (b >> 3)));
 #endif
+                //debug ("int branch 15b\n");
 				break;
 			case GDF_16BIT_565RGB:
 				*(unsigned short *) dest =
@@ -1417,6 +1433,7 @@ void logo_plot (void *screen, int width, int x, int y)
 			case GDF_32BIT_X888RGB:
 				*(unsigned long *) dest =
 					SWAP32 ((unsigned long) ((r << 16) | (g << 8) | b));
+                //debug ("int branch 32b\n");
 				break;
 			case GDF_24BIT_888RGB:
 #ifdef VIDEO_FB_LITTLE_ENDIAN
@@ -1428,13 +1445,17 @@ void logo_plot (void *screen, int width, int x, int y)
 				dest[1] = g;
 				dest[2] = b;
 #endif
+                //debug ("int branch 24b\n");
 				break;
 			}
+            //debug ("source = %p, dest=%p\n",source,dest);
 			source++;
 			dest += VIDEO_PIXEL_SIZE;
 		}
 		dest += skip;
 	}
+
+    //debug ("can u run to here?\n");
 #ifdef CONFIG_VIDEO_BMP_LOGO
 	free (logo_red);
 	free (logo_green);
@@ -1481,7 +1502,11 @@ static void *video_logo (void)
 	}
 #endif /* CONFIG_SPLASH_SCREEN */
 
+    debug ("VIDEO_COLS=%d\n",VIDEO_COLS);
+    debug ("VIDEO_VISIBLE_COLS=%d, pGD->winSizeX=%d\n",VIDEO_VISIBLE_COLS,pGD->winSizeX);
 	logo_plot (video_fb_address, VIDEO_COLS, 0, 0);
+
+    debug ("logo_plot() done!\n");
 
 	sprintf (info, " %s", &version_string);
 
@@ -1529,6 +1554,7 @@ static void *video_logo (void)
 	}
 #endif
 
+    debug ("print logo?\n");
 	return (video_fb_address + video_logo_height * VIDEO_LINE_LEN);
 }
 #endif
