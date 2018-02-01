@@ -285,16 +285,20 @@
 #define CONFIG_VIDEO
 #define CONFIG_VIDEO_DM36X
 #define CONFIG_VIDEO_LOGO
-#define CONFIG_VIDEO_BMP_LOGO
+//#define CONFIG_VIDEO_BMP_LOGO
+#define CONFIG_SPLASH_SCREEN
+#define CONFIG_SPLASH_SCREEN_ALIGN
 #define VIDEO_FB_16BPP_WORD_SWAP
 #define CONFIG_CFB_CONSOLE
 #define LCD_VIDEO_ADDR  0x82200000
 #define CONFIG_CONSOLE_MUX
 
-//#define VIDEO_KBD_INIT_FCT -1
-#define VIDEO_KBD_INIT_FCT 0
+#define VIDEO_KBD_INIT_FCT -1
+//#define VIDEO_KBD_INIT_FCT 0
 #define VIDEO_TSTC_FCT serial_tstc
 #define VIDEO_GETC_FCT serial_getc
+
+#define MY_DEBUG
 
 ////#define CONFIG_STDOUT "vga,serial"
 

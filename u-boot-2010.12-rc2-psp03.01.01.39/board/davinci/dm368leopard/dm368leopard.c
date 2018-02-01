@@ -116,6 +116,11 @@ int board_init(void)
 
 	}
 
+    /* Configure GPIO23 as output */
+    writel((readl(&gpio1_base->dir) & ~(1 << 23)), &gpio1_base->dir);
+    /* GPIO 23 high */
+	writel((readl(&gpio1_base->out_data) | (1 << 23)), &gpio1_base->out_data);
+
 	return 0;
 }
 

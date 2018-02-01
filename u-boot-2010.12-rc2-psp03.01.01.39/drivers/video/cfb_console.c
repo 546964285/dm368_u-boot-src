@@ -1508,6 +1508,96 @@ static void *video_logo (void)
 
     debug ("logo_plot() done!\n");
 
+    unsigned char recv[5];
+    unsigned char send;
+    int ret;
+    //ret = i2c_read (0x55,0xf0,1,(uchar *)&recv,1);
+    ret = i2c_read (0x55,0xf0,1,recv,5);
+    if(ret!=0)
+    {
+        //logo_plot (video_fb_address, VIDEO_COLS, 0, 0);
+	    sprintf (info, " %s", "MCU I2C ERR!!");
+    	space = (VIDEO_LINE_LEN / 2 - VIDEO_INFO_X) / VIDEO_FONT_WIDTH;
+    	len = strlen(info);
+
+        if (len > space)
+        {
+            video_drawchars (VIDEO_INFO_X, VIDEO_INFO_Y,
+				 (uchar *)info, space);
+            video_drawchars (VIDEO_INFO_X + VIDEO_FONT_WIDTH,
+				 VIDEO_INFO_Y + VIDEO_FONT_HEIGHT,
+				 (uchar *)info + space, len - space);
+		    y_off = 1;
+        }
+        else
+        {
+		    video_drawstring (VIDEO_INFO_X, VIDEO_INFO_Y, (uchar *)info);
+        }
+
+#ifdef MY_DEBUG
+        udelay (1000000);
+#else
+        while(1);
+#endif // MY_DEBUG
+    }
+    if (recv[0]!=0x52)
+    {
+        send = 0xab;
+        i2c_write (0x55,0xf4,1,&send,1);
+        sprintf (info, " %s", "MCU FAILED!!");
+        space = (VIDEO_LINE_LEN / 2 - VIDEO_INFO_X) / VIDEO_FONT_WIDTH;
+    	len = strlen(info);
+        if (len > space)
+        {
+            video_drawchars (VIDEO_INFO_X, VIDEO_INFO_Y + VIDEO_FONT_HEIGHT,
+				 (uchar *)info, space);
+            video_drawchars (VIDEO_INFO_X + VIDEO_FONT_WIDTH,
+				 VIDEO_INFO_Y + VIDEO_FONT_HEIGHT*2,
+				 (uchar *)info + space, len - space);
+		    y_off = 1;
+        }
+        else
+        {
+		    video_drawstring (VIDEO_INFO_X, VIDEO_INFO_Y + VIDEO_FONT_HEIGHT, (uchar *)info);
+        }
+#ifdef MY_DEBUG
+        udelay (1000000);
+#else
+        while(1);
+#endif // MY_DEBUG
+    } 
+
+    if (recv[2]==0xAA)
+    {
+        sprintf (info, " %s", "Battary Charging!!");
+
+        space = (VIDEO_LINE_LEN / 2 - VIDEO_INFO_X) / VIDEO_FONT_WIDTH;
+    	len = strlen(info);
+        if (len > space)
+        {
+            video_drawchars (VIDEO_INFO_X, VIDEO_INFO_Y + VIDEO_FONT_HEIGHT,
+				 (uchar *)info, space);
+            video_drawchars (VIDEO_INFO_X + VIDEO_FONT_WIDTH*3,
+				 VIDEO_INFO_Y + VIDEO_FONT_HEIGHT*4,
+				 (uchar *)info + space, len - space);
+		    y_off = 1;
+        }
+        else
+        {
+		    video_drawstring (VIDEO_INFO_X, VIDEO_INFO_Y + VIDEO_FONT_HEIGHT, (uchar *)info);
+        }
+        video_drawchars (VIDEO_INFO_X,
+				 VIDEO_INFO_Y + VIDEO_FONT_HEIGHT*3,
+				 (uchar *)info + space, len - space);
+#ifdef MY_DEBUG
+        udelay (1000000);
+#else
+        while(1);
+#endif // MY_DEBUG
+    }
+
+    return (video_fb_address + video_logo_height * VIDEO_LINE_LEN);
+
 	sprintf (info, " %s", &version_string);
 
 	space = (VIDEO_LINE_LEN / 2 - VIDEO_INFO_X) / VIDEO_FONT_WIDTH;
