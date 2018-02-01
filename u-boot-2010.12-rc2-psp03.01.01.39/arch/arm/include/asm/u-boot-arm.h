@@ -52,6 +52,7 @@ int	arch_misc_init(void);
 /* board/.../... */
 int	board_init(void);
 int	dram_init (void);
+void    mcu_check(void);
 void	dram_init_banksize (void);
 void	setup_serial_tag (struct tag **params);
 void	setup_revision_tag (struct tag **params);

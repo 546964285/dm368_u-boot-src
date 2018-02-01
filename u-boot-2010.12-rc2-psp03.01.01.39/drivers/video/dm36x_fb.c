@@ -33,8 +33,8 @@ void *video_hw_init (void)
     pGD->frameAdrs = LCD_VIDEO_ADDR;
     pGD->memSize = VIDEO_MEM_SIZE;
     /* clear video memory */
-    //memset((void *)pGD->frameAdrs, 0x00, pGD->memSize);
-    memset((void *)pGD->frameAdrs, 0xe0, pGD->memSize);
+    memset((void *)pGD->frameAdrs, 0x00, pGD->memSize);
+    //memset((void *)pGD->frameAdrs, 0xe0, pGD->memSize);//red background
 
     pGD->winSizeX = 640;
     pGD->plnSizeX = 640;

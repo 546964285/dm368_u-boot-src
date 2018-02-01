@@ -69,7 +69,8 @@
 /* I2C */
 #define CONFIG_HARD_I2C
 #define CONFIG_DRIVER_DAVINCI_I2C
-#define CONFIG_SYS_I2C_SPEED		400000
+//#define CONFIG_SYS_I2C_SPEED		400000
+#define CONFIG_SYS_I2C_SPEED		100000
 #define CONFIG_SYS_I2C_SLAVE		0x10	/* SMBus host address */
 
 /* GPIO */
@@ -278,20 +279,23 @@
 #define CONFIG_SYS_INIT_SP_ADDR		\
 	(CONFIG_SYS_SDRAM_BASE + 0x1000 - GENERATED_GBL_DATA_SIZE)
 
-#define DEBUG
 //#define CONFIG_LCD
+//#define DEBUG
 #define CONFIG_CMD_BMP
 #define CONFIG_VIDEO
 #define CONFIG_VIDEO_DM36X
 #define CONFIG_VIDEO_LOGO
 #define CONFIG_VIDEO_BMP_LOGO
-//#define VIDEO_FB_16BPP_WORD_SWAP
+#define VIDEO_FB_16BPP_WORD_SWAP
 #define CONFIG_CFB_CONSOLE
 #define LCD_VIDEO_ADDR  0x82200000
-//#define CONFIG_CONSOLE_MUX
+#define CONFIG_CONSOLE_MUX
 
-#define VIDEO_KBD_INIT_FCT -1
+//#define VIDEO_KBD_INIT_FCT -1
+#define VIDEO_KBD_INIT_FCT 0
 #define VIDEO_TSTC_FCT serial_tstc
 #define VIDEO_GETC_FCT serial_getc
+
+////#define CONFIG_STDOUT "vga,serial"
 
 #endif /* __CONFIG_H */

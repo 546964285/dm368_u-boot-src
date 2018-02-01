@@ -205,3 +205,15 @@ int board_mmc_init(bd_t *bis)
 }
 
 #endif
+
+void mcu_check(void)
+{
+    unsigned int tmp=0;
+    int ret;
+
+    ret = i2c_read(0x55,0xf0,1,(uchar *)&tmp,1);
+    printf ("i2c read chip 0x55, subaddress 0xf0, value = %d\n", tmp);
+    printf ("i2c read ret = %d\n", ret);
+    debug ("i2c read chip 0x55, subaddress 0xf0, value = %d\n", tmp);
+    debug ("i2c read ret = %d\n", ret);
+}
