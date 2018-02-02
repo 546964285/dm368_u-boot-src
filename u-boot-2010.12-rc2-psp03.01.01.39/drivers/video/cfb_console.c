@@ -94,6 +94,9 @@ CONFIG_VIDEO_HW_CURSOR:	     - Uses the hardware cursor capability of the
 
 #include <malloc.h>
 
+#include <asm/io.h>
+#include <asm/arch/gpio_defs.h>
+
 /*****************************************************************************/
 /* Console device defines with SMI graphic				     */
 /* Any other graphic must change this section				     */
@@ -1507,7 +1510,7 @@ static void *video_logo (void)
 	logo_plot (video_fb_address, VIDEO_COLS, 0, 0);
 
     debug ("logo_plot() done!\n");
-
+    udelay (700000);
     unsigned char recv[5];
     unsigned char send;
     int ret;
@@ -1533,6 +1536,14 @@ static void *video_logo (void)
         {
 		    video_drawstring (VIDEO_INFO_X, VIDEO_INFO_Y, (uchar *)info);
         }
+
+        printf("backlight!\n");
+        //udelay (1000000);
+        struct davinci_gpio *gpio1_base = (struct davinci_gpio *)DAVINCI_GPIO_BANK01;
+        /* Configure GPIO23 as output */
+        writel((readl(&gpio1_base->dir) & ~(1 << 23)), &gpio1_base->dir);
+        /* GPIO 23 high */
+        writel((readl(&gpio1_base->out_data) | (1 << 23)), &gpio1_base->out_data);
 
 #ifdef MY_DEBUG
         udelay (1000000);
@@ -1560,6 +1571,15 @@ static void *video_logo (void)
         {
 		    video_drawstring (VIDEO_INFO_X, VIDEO_INFO_Y + VIDEO_FONT_HEIGHT, (uchar *)info);
         }
+
+        printf("backlight!\n");
+        //udelay (1000000);
+        struct davinci_gpio *gpio1_base = (struct davinci_gpio *)DAVINCI_GPIO_BANK01;
+        /* Configure GPIO23 as output */
+        writel((readl(&gpio1_base->dir) & ~(1 << 23)), &gpio1_base->dir);
+        /* GPIO 23 high */
+        writel((readl(&gpio1_base->out_data) | (1 << 23)), &gpio1_base->out_data);
+
 #ifdef MY_DEBUG
         udelay (1000000);
 #else
@@ -1589,6 +1609,15 @@ static void *video_logo (void)
         video_drawchars (VIDEO_INFO_X,
 				 VIDEO_INFO_Y + VIDEO_FONT_HEIGHT*3,
 				 (uchar *)info + space, len - space);
+
+        printf("backlight!\n");
+        //udelay (1000000);
+        struct davinci_gpio *gpio1_base = (struct davinci_gpio *)DAVINCI_GPIO_BANK01;
+        /* Configure GPIO23 as output */
+        writel((readl(&gpio1_base->dir) & ~(1 << 23)), &gpio1_base->dir);
+        /* GPIO 23 high */
+        writel((readl(&gpio1_base->out_data) | (1 << 23)), &gpio1_base->out_data);
+
 #ifdef MY_DEBUG
         udelay (1000000);
 #else
@@ -1720,6 +1749,13 @@ static int video_init (void)
 #else
 	video_console_address = video_fb_address;
 #endif
+    
+    printf("backlight!\n");
+    struct davinci_gpio *gpio1_base = (struct davinci_gpio *)DAVINCI_GPIO_BANK01;
+    /* Configure GPIO23 as output */
+    writel((readl(&gpio1_base->dir) & ~(1 << 23)), &gpio1_base->dir);
+    /* GPIO 23 high */
+    writel((readl(&gpio1_base->out_data) | (1 << 23)), &gpio1_base->out_data);
 
 	/* Initialize the console */
 	console_col = 0;

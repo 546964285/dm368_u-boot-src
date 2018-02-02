@@ -71,7 +71,7 @@ void *video_hw_init (void)
     REG(OSD_BASEPX)         = 0x00000050;
     REG(OSD_BASEPY)         = 0x00000003;
     REG(OSD_OSDWIN0XL)      = 0x00000280;
-    REG(OSD_OSDWIN0YL)      = 0x000001E0;
+    REG(OSD_OSDWIN0YL)      = 0x00000281;
     REG(OSD_MISCCTL)        = 0x00000000;
 
     REG(VENC_VMOD)          = 0x00002011;
@@ -83,9 +83,9 @@ void *video_hw_init (void)
     REG(VENC_HINTVL)        = 0x000002FF;
     REG(VENC_HSTART)        = 0x00000050;
     REG(VENC_HVALID)        = 0x00000280;
-    REG(VENC_VINTVL)        = 0x000001EA;
+    REG(VENC_VINTVL)        = 0x0000028A;
     REG(VENC_VSTART)        = 0x00000003;
-    REG(VENC_VVALID)        = 0x000001E0;
+    REG(VENC_VVALID)        = 0x00000281;
     REG(VENC_LCDOUT)        = 0x00000001;
     REG(VENC_DCLKCTL)       = 0x00000800;
     REG(VENC_DCLKPTN0)      = 0x00000001;
