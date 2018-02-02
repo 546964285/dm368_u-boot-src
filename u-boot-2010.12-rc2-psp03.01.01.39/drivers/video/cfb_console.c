@@ -350,6 +350,7 @@ extern void video_get_info_str (    /* setup a board string: type, speed, etc. *
 static GraphicDevice *pGD;	/* Pointer to Graphic array */
 
 static void *video_fb_address;		/* frame buffer address */
+static void *video_fb_disp_address;		/* frame buffer address */
 static void *video_console_address;	/* console buffer start address */
 
 static int video_logo_height = VIDEO_LOGO_HEIGHT;
@@ -409,6 +410,30 @@ static const int video_font_draw_table32[16][4] = {
 
 
 /******************************************************************************/
+void rotate270_haf(void)
+{
+    int px,py;
+    int width=640;
+    
+    unsigned char * psrc[2] = {NULL,NULL};
+    unsigned char * pdst[2] = {NULL,NULL};
+    
+    memset((void* )video_fb_disp_address, 0, 640*640*2);
+
+    for(px=320;px<640;px++)
+    {
+        psrc[0]=video_fb_address+(640-px-1)*640*2;
+        pdst[0]=video_fb_disp_address+(px-320)*2;
+
+        for(py=0;py<640;py++)
+        {
+            memcpy(pdst[0],psrc[0],2);
+            psrc[0]+=2;
+            pdst[0]+=640*2;
+        }
+    }
+}
+
 
 static void video_drawchars (int xx, int yy, unsigned char *s, int count)
 {
@@ -519,6 +544,8 @@ static void video_drawchars (int xx, int yy, unsigned char *s, int count)
 		}
 		break;
 	}
+
+    rotate270_haf();
 }
 
 /*****************************************************************************/
@@ -1510,6 +1537,9 @@ static void *video_logo (void)
 	logo_plot (video_fb_address, VIDEO_COLS, 0, 0);
 
     debug ("logo_plot() done!\n");
+    rotate270_haf();
+
+
     udelay (700000);
     unsigned char recv[5];
     unsigned char send;
@@ -1688,7 +1718,10 @@ static int video_init (void)
 	if ((pGD = video_hw_init ()) == NULL)
 		return -1;
 
-	video_fb_address = (void *) VIDEO_FB_ADRS;
+	//video_fb_address = (void *) VIDEO_FB_ADRS;
+    video_fb_disp_address = (void *) VIDEO_FB_ADRS;
+    video_fb_address = video_fb_disp_address + 640*640*2;
+
 #ifdef CONFIG_VIDEO_HW_CURSOR
 	video_init_hw_cursor (VIDEO_FONT_WIDTH, VIDEO_FONT_HEIGHT);
 #endif
