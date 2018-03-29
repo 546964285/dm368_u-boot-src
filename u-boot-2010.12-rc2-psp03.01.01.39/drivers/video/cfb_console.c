@@ -1581,11 +1581,19 @@ static void *video_logo (void)
         while(1);
 #endif // MY_DEBUG
     }
-    if (recv[0]!=0x52)
+    else
     {
-        send = 0xab;
-        i2c_write (0x55,0xf4,1,&send,1);
+        send = 0x01;
+        i2c_write (0x55,0xf5,1,&send,1);    
+    }
+    if (recv[0]!=0x01)
+    {
+//       send = 0xab;
+//       i2c_write (0x55,0xf4,1,&send,1);
+
+//        sprintf (info, " battery capacity: %d%%", recv[1]);
         sprintf (info, " %s", "MCU FAILED!!");
+
         space = (VIDEO_LINE_LEN / 2 - VIDEO_INFO_X) / VIDEO_FONT_WIDTH;
     	len = strlen(info);
         if (len > space)
@@ -1611,15 +1619,15 @@ static void *video_logo (void)
         writel((readl(&gpio1_base->out_data) | (1 << 23)), &gpio1_base->out_data);
 
 #ifdef MY_DEBUG
-        udelay (1000000);
+       udelay (1000000);
 #else
         while(1);
 #endif // MY_DEBUG
     } 
 
-    if (recv[2]==0xAA)
+    if (recv[2]==0x02)
     {
-        sprintf (info, " %s", "Battary Charging!!");
+        sprintf (info, " battery capacity: %d%%", recv[1]);  
 
         space = (VIDEO_LINE_LEN / 2 - VIDEO_INFO_X) / VIDEO_FONT_WIDTH;
     	len = strlen(info);
@@ -1636,9 +1644,9 @@ static void *video_logo (void)
         {
 		    video_drawstring (VIDEO_INFO_X, VIDEO_INFO_Y + VIDEO_FONT_HEIGHT, (uchar *)info);
         }
-        video_drawchars (VIDEO_INFO_X,
-				 VIDEO_INFO_Y + VIDEO_FONT_HEIGHT*3,
-				 (uchar *)info + space, len - space);
+ //       video_drawchars (VIDEO_INFO_X,
+//				 VIDEO_INFO_Y + VIDEO_FONT_HEIGHT*3,
+//				 (uchar *)info + space, len - space);
 
         printf("backlight!\n");
         //udelay (1000000);
@@ -1651,7 +1659,31 @@ static void *video_logo (void)
 #ifdef MY_DEBUG
         udelay (1000000);
 #else
-        while(1);
+        while(1){
+            i2c_read (0x55,0xf0,1,recv,5);
+            if(recv[2]==0x01){  //end charge
+               send = 0x03;
+               i2c_write (0x55,0xf4,1,&send,1);             
+            }
+            udelay (1000000);
+            sprintf (info, " battery capacity: %d%%", recv[1]); 
+            space = (VIDEO_LINE_LEN / 2 - VIDEO_INFO_X) / VIDEO_FONT_WIDTH;
+    	    len = strlen(info);
+             if (len > space)
+             {
+                 video_drawchars (VIDEO_INFO_X, VIDEO_INFO_Y + VIDEO_FONT_HEIGHT,
+				         (uchar *)info, space);
+                    video_drawchars (VIDEO_INFO_X + VIDEO_FONT_WIDTH*3,
+				 VIDEO_INFO_Y + VIDEO_FONT_HEIGHT*4,
+				     (uchar *)info + space, len - space);
+		         y_off = 1;
+            }
+             else
+            {
+		        video_drawstring (VIDEO_INFO_X, VIDEO_INFO_Y + VIDEO_FONT_HEIGHT, (uchar *)info);
+            }
+             
+        }
 #endif // MY_DEBUG
     }
 

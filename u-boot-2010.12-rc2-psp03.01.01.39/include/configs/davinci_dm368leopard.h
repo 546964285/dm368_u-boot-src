@@ -298,7 +298,7 @@
 #define VIDEO_TSTC_FCT serial_tstc
 #define VIDEO_GETC_FCT serial_getc
 
-#define MY_DEBUG
+//#define MY_DEBUG
 
 ////#define CONFIG_STDOUT "vga,serial"
 
